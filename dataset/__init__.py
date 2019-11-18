@@ -1,1 +1,1 @@
-__name__ == '__main__'
+from dataset import *

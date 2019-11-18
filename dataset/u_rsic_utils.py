@@ -8,7 +8,7 @@ import numpy as np
 import random
 from progress.bar import Bar
 
-from .path import ProcessingPath, Path
+from path import ProcessingPath, Path
 
 # 将原始图像resize为2560x2560
 def img_resize(data_path, save_path, img_type, img_format, re_size=(2560, 2560)):
@@ -94,8 +94,8 @@ class ImageSpliter:
 
 
 # 切分训练集和验证集
-def train_valid(data_list, paths_dict):
-    _data_list = data_list.copy()
+def train_valid(paths_dict, source_path, tr_save_path, vd_save_path):
+    _data_list = os.listdir(os.path.join(source_path, 'img'))
     num_names = len(_data_list)
     num_train = int(num_names * 0.9)
     num_val = num_names - num_train
@@ -103,20 +103,21 @@ def train_valid(data_list, paths_dict):
     bar = Bar('Dividing:', max=num_names)
     
     for i in range(num_names):
-        name = random.choice(_data_list)
-        _data_list.remove(name)
+        file = random.choice(_data_list)
+        name = file.split(".")[0]
+        _data_list.remove(file)
         img_file = ''.join([name, paths_dict['image_format']])
         label_file = ''.join([name, paths_dict['label_format']])
 
-        img_source = os.path.join(paths_dict['data_split_path'], 'img', img_file)
-        label_source = os.path.join(paths_dict['data_split_path'], 'label', label_file)
+        img_source = os.path.join(source_path, 'img', img_file)
+        label_source = os.path.join(source_path, 'label', label_file)
 
         if i < num_train:
-            img_target = os.path.join(paths_dict['train_split_path'], 'img')
-            label_target = os.path.join(paths_dict['train_split_path'], 'label')
+            img_target = os.path.join(tr_save_path, 'img')
+            label_target = os.path.join(tr_save_path, 'label')
         else:
-            img_target = os.path.join(paths_dict['val_split_path'], 'img')
-            label_target = os.path.join(paths_dict['val_split_path'], 'label')
+            img_target = os.path.join(vd_save_path, 'img')
+            label_target = os.path.join(vd_save_path, 'label')
             
         shutil.copy(img_source, img_target)
         shutil.copy(label_source, label_target)
@@ -186,31 +187,31 @@ def std(path, img_list, mean, pixels_num):
     return math.sqrt(value_std / pixels_num)
         
 
-# if __name__ == '__main__':
-#     img_paths = ProcessingPath('img')
-#     img_paths_dict = img_paths.data_dir()
 
-#     label_paths = ProcessingPath('label')
-#     label_paths_dict = label_paths.data_dir()
+# img_paths = ProcessingPath('img')
+# img_paths_dict = img_paths.data_dir()
 
-#     paths = ProcessingPath('all')
-#     paths_dict = paths.data_dir()
+# label_paths = ProcessingPath('label')
+# label_paths_dict = label_paths.data_dir()
 
-#     img_resize(img_paths_dict['ori_path'], img_paths_dict['resize_path'], 
-#                 img_paths_dict['img_type'], img_paths_dict['img_format'])
-#     img_resize(label_paths_dict['ori_path'], label_paths_dict['resize_path'], 
-#                 label_paths_dict['img_type'], label_paths_dict['img_format'])
+# paths = ProcessingPath('all')
+# paths_dict = paths.data_dir()
 
-#     img_spliter = ImageSpliter(img_paths_dict)
-#     img_spliter.split_image()
+# img_resize(img_paths_dict['ori_path'], img_paths_dict['resize_path'], 
+#             img_paths_dict['img_type'], img_paths_dict['img_format'])
+# img_resize(label_paths_dict['ori_path'], label_paths_dict['resize_path'], 
+#             label_paths_dict['img_type'], label_paths_dict['img_format'])
 
-#     label_spliter = ImageSpliter(label_paths_dict)
-#     label_spliter.split_image()
+# img_spliter = ImageSpliter(img_paths_dict)
+# img_spliter.split_image()
 
-#     data_name_list = img_spliter.get_data_list()
+# label_spliter = ImageSpliter(label_paths_dict)
+# label_spliter.split_image()
 
-#     train_valid(data_name_list, paths_dict)
+# train_valid(paths_dict, paths_dict['aug_split_1000'], 
+#             paths_dict['train_split_1000'],
+#             paths_dict['val_split_1000'])
 
-#     print(mean_std(img_paths_dict['train_split_path']))
+# print(mean_std(img_paths_dict['train_split_path']))
 
 
