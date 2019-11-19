@@ -8,7 +8,7 @@ import numpy as np
 import random
 from progress.bar import Bar
 
-from path import ProcessingPath, Path
+from .path import ProcessingPath, Path
 
 # 将原始图像resize为2560x2560
 def img_resize(data_path, save_path, img_type, img_format, re_size=(2560, 2560)):
@@ -187,6 +187,17 @@ def std(path, img_list, mean, pixels_num):
     return math.sqrt(value_std / pixels_num)
         
 
+def divide_data(cellsize):
+    paths = ProcessingPath('all')
+    paths_dict = paths.data_dir()
+    
+    train_valid(paths_dict, paths_dict[f'aug_split_{cellsize}'], 
+            paths_dict['train_split_{cellsize}'],
+            paths_dict['val_split_{cellsize}'])
+
+
+# divide_data(256)
+
 
 # img_paths = ProcessingPath('img')
 # img_paths_dict = img_paths.data_dir()
@@ -194,8 +205,6 @@ def std(path, img_list, mean, pixels_num):
 # label_paths = ProcessingPath('label')
 # label_paths_dict = label_paths.data_dir()
 
-# paths = ProcessingPath('all')
-# paths_dict = paths.data_dir()
 
 # img_resize(img_paths_dict['ori_path'], img_paths_dict['resize_path'], 
 #             img_paths_dict['img_type'], img_paths_dict['img_format'])
@@ -208,9 +217,7 @@ def std(path, img_list, mean, pixels_num):
 # label_spliter = ImageSpliter(label_paths_dict)
 # label_spliter.split_image()
 
-# train_valid(paths_dict, paths_dict['aug_split_1000'], 
-#             paths_dict['train_split_1000'],
-#             paths_dict['val_split_1000'])
+
 
 # print(mean_std(img_paths_dict['train_split_path']))
 
