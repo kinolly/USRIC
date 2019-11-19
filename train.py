@@ -42,6 +42,7 @@ class Trainer:
 
         self.net = UNet(self.args.inplanes, self.num_classes).cuda()
         self.optimizer = torch.optim.SGD(self.net.parameters(), lr=self.args.lr, momentum=0.9)
+        print(self.optimizer)
         if self.args.apex:
             self.net, self.optimizer = amp.initialize(self.net, self.optimizer, opt_level='O1')
         self.net = nn.DataParallel(self.net, self.args.gpu_ids)
@@ -206,11 +207,11 @@ def train():
     print("==> Start training")
     print('Total Epoches:', trainer.epochs)
     print('Starting Epoch:', trainer.start_epoch)
-    for epoch in range(trainer.start_epoch, trainer.epochs):
-        trainer.training(epoch)
-        if not args.no_val:
-            new_pred = trainer.validation(epoch)
-            trainer.scheduler.step(new_pred)
-            # trainer.auto_reset_learning_rate()
+    # for epoch in range(trainer.start_epoch, trainer.epochs):
+    #     trainer.training(epoch)
+    #     if not args.no_val:
+    #         new_pred = trainer.validation(epoch)
+    #         trainer.scheduler.step(new_pred)
+    #         # trainer.auto_reset_learning_rate()
 
 train()

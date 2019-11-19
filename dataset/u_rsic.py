@@ -28,12 +28,12 @@ class URSIC(Dataset):
         self.std = 47.71913221750954
 
         if self._mode == 'train':
-            self._image_dir = os.path.join(self._dir_dict['train_split_path'],'img')
-            self._label_dir = os.path.join(self._dir_dict['train_split_path'],'label')
+            self._image_dir = os.path.join(self._dir_dict['train_split_256'],'img')
+            self._label_dir = os.path.join(self._dir_dict['train_split_256'],'label')
 
         if self._mode == 'val':
-            self._image_dir = os.path.join(self._dir_dict['val_split_path'],'img')
-            self._label_dir = os.path.join(self._dir_dict['val_split_path'],'label')
+            self._image_dir = os.path.join(self._dir_dict['val_split_256'],'img')
+            self._label_dir = os.path.join(self._dir_dict['val_split_256'],'label')
 
         self.img_format = self._dir_dict['image_format']
         self.label_format = self._dir_dict['label_format']
